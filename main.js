@@ -40,7 +40,9 @@ $("#selectedImage").on("change", function () {
 });
 
 function initEditor(placeholder) {
-    options.placeholder = placeholder;
+    if (placeholder) {
+        options.placeholder = placeholder;
+    }
     quill = new Quill('#editor', options);
     quill.on('selection-change', function (range, oldRange, source) {
         if (range) {
@@ -52,7 +54,7 @@ function initEditor(placeholder) {
 
 function setReviewContent(reviewContent) {
     quill.clipboard.dangerouslyPasteHTML(
-        index,
+        0,
         reviewContent
     );
 }
@@ -61,20 +63,21 @@ function getReviewContentHTML(arrImage) {
     // Get html 
     var contentHtml = $(".ql-editor")[0].innerHTML;
     // Replace base64 -> url
-    arrImage.forEach(element => {
-        contentHtml.replace(arrImageBase64[index], element);
+    arrImage.forEach((element, index) => {
+        contentHtml = contentHtml.replace(arrImageBase64[index], element);
     });
     return contentHtml;
 }
 
 function getReviewIntro() {
     var contentHtml = $(".ql-editor")[0].innerHTML;
-    console.log('test', contentHtml);
+    // console.log('test', contentHtml);
     if (contentHtml) {
-        console.log('ahihi', contentHtml.replace(/<\/?[^>]+(>|$)/g, ""));
+        // console.log('ahihi', contentHtml.replace(/<\/?[^>]+(>|$)/g, ""));
         return contentHtml.replace(/<\/?[^>]+(>|$)/g, "");
+    } else {
+        return '';
     }
-    return '';
 }
 
 function getArrImageBase64() {
@@ -85,7 +88,7 @@ function getArrImageBase64() {
             arrImageBase64.push($(imageElement[i]).attr('src'));
         }
     }
-    console.log("arrImageBase64", arrImageBase64);
+    // console.log("arrImageBase64", arrImageBase64);
     return arrImageBase64;
 }
 
@@ -126,7 +129,6 @@ function convertImageToBase64(file) {
     reader.readAsDataURL(file);
 }
 
-var textSize = ['14px', '16px'];
 var option = true;
 
 function clickSizeIcon() {
