@@ -26,17 +26,23 @@ body {
     border-left: none;
     border-bottom: none;
     text-align: center;
+    height: 100px;
 }
 
 .custom-toolbar button {
     border: none;
     outline: none;
     background: white;
-    padding: 10px 10px;
-    height: 70px;
+    height: 100%;
+    width: 20%;
+    float: left;
 }
 
-.custom-toolbar button #icon-text-size {
+.custom-toolbar button img {
+    width: 95%;
+}
+
+/* .custom-toolbar button #icon-text-size {
     width: 50px;
 }
 
@@ -54,7 +60,7 @@ body {
 
 .custom-toolbar button #icon-image {
     width: 50px;
-}
+} */
 
 .test {
     position: fixed;
