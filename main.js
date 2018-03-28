@@ -102,14 +102,18 @@ function setUrlImage(imageUrl) {
         "image",
         imageUrl
     );
+    quill.clipboard.dangerouslyPasteHTML(
+        range.index + 1,
+        '<br/><br/>'
+    );
 }
 
 function showToolbar(isShow) {
     if (isShow) {
-        $("#editor").prop("readonly", false);
+        quill.enable(true); 
         $('#custom-toolbar').show();
     } else {
-        $("#editor").prop("readonly", true);
+        quill.enable(false); 
         $('#custom-toolbar').hide();
     }
 }
@@ -120,13 +124,7 @@ function convertImageToBase64(file) {
     // Define a callback function to run, when FileReader finishes its job
     reader.onload = e => {
         // Read image as base64 and set to imageData
-        let range = quill.getSelection();
-        imageBase64 = e.target.result;
-        quill.insertEmbed(
-            range.index,
-            "image",
-            imageBase64
-        );
+        setUrlImage(e.target.result);
     }
     // Start the reader job - read file as a data url (base64 format)
     reader.readAsDataURL(file);
