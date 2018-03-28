@@ -81,15 +81,18 @@ function getReviewIntro() {
 }
 
 function getArrImageBase64() {
+    var arrTemp = [];
     // Get all image in editor
     var imageElement = $('#editor img');
     if (imageElement) {
         for (var i = 0; i < imageElement.length; i++) {
-            arrImageBase64.push($(imageElement[i]).attr('src'));
+            var strBase64 = $(imageElement[i]).attr('src');
+            arrImageBase64.push(strBase64);
+            arrTemp.push(strBase64.substring(strBase64.indexOf(",") + 1));
         }
     }
-    // console.log("arrImageBase64", arrImageBase64);
-    return arrImageBase64;
+    // console.log("arrImageBase64", arrTemp);
+    return arrTemp;
 }
 
 function setUrlImage(imageUrl) {

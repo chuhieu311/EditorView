@@ -5,7 +5,7 @@ body {
 #editor {
     border: none;
     position: fixed;
-    padding-bottom: 100px;
+    padding-bottom: 200px;
     width: 100%;
 }
 
@@ -19,12 +19,13 @@ body {
 
 .custom-toolbar {
     position: fixed;
-    bottom: 0;
+    bottom: 100px;
     width: 100%;
     border-top: 1px solid #ccc;
     border-right: none;
     border-left: none;
     border-bottom: none;
+    text-align: center;
 }
 
 .custom-toolbar button {
@@ -53,4 +54,9 @@ body {
 
 .custom-toolbar button #icon-image {
     width: 50px;
+}
+
+.test {
+    position: fixed;
+    bottom: 0;
 }
