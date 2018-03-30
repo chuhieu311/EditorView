@@ -26,7 +26,7 @@ var options = {
 var quill = null;
 var arrImageBase64 = [];
 var imageBase64 = '';
-
+//initEditor();
 //  custom image
 $("#selectedImage").on("change", function () {
     const file = $("#selectedImage")[0].files[0];
@@ -45,12 +45,10 @@ function initEditor(placeholder) {
     }
     quill = new Quill('#editor', options);
     quill.on('selection-change', function (range, oldRange, source) {
-        if (range) {
-            var format = quill.getFormat(range);
-            changeIconAfterSelectionChange(format);
-        }
+        changeIconAfterSelectionChange(range);
     });
     quill.on('text-change', function (delta, oldDelta, source) {
+        quill.update(source);
         changeIconAfterTextChange(delta);
     });
 }
@@ -190,46 +188,67 @@ function resetIconButton() {
     changeIcon($('#icon-quote'), false);
 }
 
-function changeIconAfterSelectionChange(format) {
-    if (format) {
-        resetIconButton();
-        var size = format.size;
-        var list = format.list;
-        var blockquote = format.blockquote;
-        if (size) {
-            changeIcon($('#icon-text-size'), true);
-        }
-        if (list) {
-            changeIcon($('#icon-list'), true);
-        }
-        if (blockquote) {
-            changeIcon($('#icon-quote'), true);
+function changeIconAfterSelectionChange(range) {
+    if (range) {
+        var format = quill.getFormat(range);
+        if (format) {
+            console.log("range", range);
+            console.log("format", format);
+            resetIconButton();
+            var size = format.size;
+            var list = format.list;
+            var blockquote = format.blockquote;
+            if (isNotNull(size)) {
+                changeIcon($('#icon-text-size'), true);
+            }
+            if (isNotNull(list)) {
+                changeIcon($('#icon-list'), true);
+            }
+            if (isNotNull(blockquote)) {
+                changeIcon($('#icon-quote'), true);
+            }
         }
     }
 }
 
 function changeIconAfterTextChange(delta) {
-    // console.log(delta);
     if (delta) {
+        console.log("changeIconAfterTextChange", delta);
         var options = delta.ops;
+        // var retain = null;
         if (options) {
+            var retain = null;
             options.forEach(element => {
+                console.log("element", element);
                 let attributes = element.attributes;
+                let insert = element.insert;
                 if (attributes) {
                     var list = attributes.list;
                     var blockquote = attributes.blockquote;
-                    if (list) {
+                    if (isNotNull(list) && isNotNull(retain) && insert == '\n') {
                         changeIcon($('#icon-list'), true);
                     } else {
                         changeIcon($('#icon-list'), false);
                     }
-                    if (blockquote) {
+                    if (isNotNull(blockquote) && isNotNull(retain) && insert == '\n') {
                         changeIcon($('#icon-quote'), true);
                     } else {
                         changeIcon($('#icon-quote'), false);
                     }
                 }
+                retain = element.retain;
             });
         }
     }
+}
+
+function isNotNull(item) {
+    if ("undefined" == typeof (item) || null == item) {
+        return false;
+    }
+    return true;
+}
+
+function isNull(item) {
+    return !isNotNull(item);
 }
