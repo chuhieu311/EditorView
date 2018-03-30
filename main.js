@@ -48,7 +48,7 @@ function initEditor(placeholder) {
         changeIconAfterSelectionChange(range);
     });
     quill.on('text-change', function (delta, oldDelta, source) {
-        changeIconAfterTextChange(oldDelta);
+        changeIconAfterTextChange(oldDelta, delta);
     });
 }
 
@@ -210,14 +210,13 @@ function changeIconAfterSelectionChange(range) {
     }
 }
 
-function changeIconAfterTextChange(delta) {
-    if (delta) {
-        console.log("changeIconAfterTextChange", delta);
-        var options = delta.ops;
+function changeIconAfterTextChange(oldDelta, delta) {
+    if (oldDelta) {
+        var options = oldDelta.ops;
         // var retain = null;
         if (options) {
             var latestElement = options.length;
-            console.log("element", latestElement);
+            //console.log("element", latestElement);
             let attributes = latestElement.attributes;
             let insert = latestElement.insert;
             if (attributes) {
@@ -234,6 +233,12 @@ function changeIconAfterTextChange(delta) {
                     changeIcon($('#icon-quote'), false);
                 }
             }
+        }
+    }
+    if (delta) {
+        var options = delta.ops;
+        if (options.length == 2 && 1 == options[1].retain && isNotNull(options[1].attributes) && isNull(options[1].attributes.list)) {
+            changeIcon($('#icon-list'), false);
         }
     }
 }
