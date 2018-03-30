@@ -48,8 +48,7 @@ function initEditor(placeholder) {
         changeIconAfterSelectionChange(range);
     });
     quill.on('text-change', function (delta, oldDelta, source) {
-        quill.update(source);
-        changeIconAfterTextChange(delta);
+        changeIconAfterTextChange(oldDelta);
     });
 }
 
@@ -217,27 +216,24 @@ function changeIconAfterTextChange(delta) {
         var options = delta.ops;
         // var retain = null;
         if (options) {
-            var retain = null;
-            options.forEach(element => {
-                console.log("element", element);
-                let attributes = element.attributes;
-                let insert = element.insert;
-                if (attributes) {
-                    var list = attributes.list;
-                    var blockquote = attributes.blockquote;
-                    if (isNotNull(list) && isNotNull(retain) && insert == '\n') {
-                        changeIcon($('#icon-list'), true);
-                    } else {
-                        changeIcon($('#icon-list'), false);
-                    }
-                    if (isNotNull(blockquote) && isNotNull(retain) && insert == '\n') {
-                        changeIcon($('#icon-quote'), true);
-                    } else {
-                        changeIcon($('#icon-quote'), false);
-                    }
+            var latestElement = options.length;
+            console.log("element", latestElement);
+            let attributes = latestElement.attributes;
+            let insert = latestElement.insert;
+            if (attributes) {
+                var list = attributes.list;
+                var blockquote = attributes.blockquote;
+                if (isNotNull(list)) {
+                    changeIcon($('#icon-list'), true);
+                } else {
+                    changeIcon($('#icon-list'), false);
                 }
-                retain = element.retain;
-            });
+                if (isNotNull(blockquote)) {
+                    changeIcon($('#icon-quote'), true);
+                } else {
+                    changeIcon($('#icon-quote'), false);
+                }
+            }
         }
     }
 }
