@@ -38,7 +38,7 @@ $("#selectedImage").on("change", function () {
     }
     $("#selectedImage").val('');
 });
-
+// initEditor();
 function initEditor(placeholder) {
     if (placeholder) {
         options.placeholder = placeholder;
@@ -53,6 +53,7 @@ function initEditor(placeholder) {
     quill.on('text-change', function (delta, oldDelta, source) {
         changeIconAfterTextChange(delta);
     });
+    quill.focus(true);
 }
 
 function setReviewContent(reviewContent) {
@@ -90,8 +91,10 @@ function getArrImageBase64() {
     if (imageElement) {
         for (var i = 0; i < imageElement.length; i++) {
             var strBase64 = $(imageElement[i]).attr('src');
-            arrImageBase64.push(strBase64);
-            arrTemp.push(strBase64.substring(strBase64.indexOf(",") + 1));
+            if (-1 == strBase64.indexOf('http:') || -1 == strBase64.indexOf('https:')) {
+                arrImageBase64.push(strBase64);
+                arrTemp.push(strBase64.substring(strBase64.indexOf(",") + 1));
+            }
         }
     }
     // console.log("arrImageBase64", arrTemp);
@@ -115,9 +118,14 @@ function showToolbar(isShow) {
     if (isShow) {
         quill.enable(true);
         $('#custom-toolbar').show();
+        var customBarHeight = $("#custom-toolbar").height();
+        if (customBarHeight) {
+            $("#editor").css('paddingBottom', customBarHeight + 1);
+        }
     } else {
         quill.enable(false);
         $('#custom-toolbar').hide();
+        $("#editor").css('paddingBottom', 0);
     }
 }
 
