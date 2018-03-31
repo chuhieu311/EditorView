@@ -92,7 +92,7 @@ function getArrImageBase64() {
     if (imageElement) {
         for (var i = 0; i < imageElement.length; i++) {
             var strBase64 = $(imageElement[i]).attr('src');
-            if (-1 == strBase64.indexOf('http:') || -1 == strBase64.indexOf('https:')) {
+            if (-1 == strBase64.indexOf('http:') && -1 == strBase64.indexOf('https:')) {
                 arrImageBase64.push(strBase64);
                 arrTemp.push(strBase64.substring(strBase64.indexOf(",") + 1));
             }
@@ -128,6 +128,18 @@ function showToolbar(isShow) {
         $("#editor").css('paddingBottom', 0);
     }
 }
+
+function resizeHtml(height, isKeyboard) {
+    if (isKeyboard) {
+        $("#editor").css('paddingBottom', height + customBarHeight + 1);
+        $("#custom-toolbar").css('paddingBottom', height);
+    } else {
+        $("#editor").css('paddingBottom', customBarHeight + 1);
+        $("#custom-toolbar").css('paddingBottom', 0);
+    }
+}
+
+//==========================================================================
 
 function convertImageToBase64(file) {
     // create a new FileReader to read this image and convert to base64 format
