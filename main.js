@@ -26,6 +26,7 @@ var options = {
 var quill = null;
 var arrImageBase64 = [];
 var imageBase64 = '';
+var customBarHeight = 0;
 
 //  custom image
 $("#selectedImage").on("change", function () {
@@ -118,7 +119,6 @@ function showToolbar(isShow) {
     if (isShow) {
         quill.enable(true);
         $('#custom-toolbar').show();
-        var customBarHeight = $("#custom-toolbar").height();
         if (customBarHeight) {
             $("#editor").css('paddingBottom', customBarHeight + 1);
         }
@@ -243,7 +243,7 @@ function changeIconAfterTextChange(delta) {
 }
 
 $(document).ready(function () {
-    var customBarHeight = $("#custom-toolbar").height();
+    customBarHeight = $("#custom-toolbar").height();
     if (customBarHeight) {
         $("#editor").css('paddingBottom', customBarHeight + 1);
     }
