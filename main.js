@@ -233,3 +233,10 @@ function changeIconAfterTextChange(delta) {
         }
     }
 }
+
+$(document).ready(function () {
+    var customBarHeight = $("#custom-toolbar").height();
+    if (customBarHeight) {
+        $("#editor").css('paddingBottom', customBarHeight + 1);
+    }
+});
