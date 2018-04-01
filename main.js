@@ -39,20 +39,17 @@ $("#selectedImage").on("change", function () {
     }
     $("#selectedImage").val('');
 });
-// initEditor();
+//initEditor();
 function initEditor(placeholder) {
     if (placeholder) {
         options.placeholder = placeholder;
     }
     quill = new Quill('#editor', options);
     quill.on('selection-change', function (range, oldRange, source) {
-        if (range) {
-            var format = quill.getFormat(range);
-            changeIconAfterSelectionChange(format);
-        }
+        changeIconAfterSelectionChange(range);
     });
     quill.on('text-change', function (delta, oldDelta, source) {
-        changeIconAfterTextChange(delta);
+        changeIconAfterTextChange(oldDelta, delta);
     });
     quill.focus(true);
 }
@@ -210,48 +207,71 @@ function resetIconButton() {
     changeIcon($('#icon-quote'), false);
 }
 
-function changeIconAfterSelectionChange(format) {
-    if (format) {
-        resetIconButton();
-        var size = format.size;
-        var list = format.list;
-        var blockquote = format.blockquote;
-        if (size) {
-            changeIcon($('#icon-text-size'), true);
-        }
-        if (list) {
-            changeIcon($('#icon-list'), true);
-        }
-        if (blockquote) {
-            changeIcon($('#icon-quote'), true);
+function changeIconAfterSelectionChange(range) {
+    if (range) {
+        var format = quill.getFormat(range);
+        if (format) {
+            console.log("range", range);
+            console.log("format", format);
+            resetIconButton();
+            var size = format.size;
+            var list = format.list;
+            var blockquote = format.blockquote;
+            if (isNotNull(size)) {
+                changeIcon($('#icon-text-size'), true);
+            }
+            if (isNotNull(list)) {
+                changeIcon($('#icon-list'), true);
+            }
+            if (isNotNull(blockquote)) {
+                changeIcon($('#icon-quote'), true);
+            }
         }
     }
 }
 
-function changeIconAfterTextChange(delta) {
-    // console.log(delta);
-    if (delta) {
-        var options = delta.ops;
+function changeIconAfterTextChange(oldDelta, delta) {
+    if (oldDelta) {
+        var options = oldDelta.ops;
+        // var retain = null;
         if (options) {
-            options.forEach(element => {
-                let attributes = element.attributes;
-                if (attributes) {
-                    var list = attributes.list;
-                    var blockquote = attributes.blockquote;
-                    if (list) {
-                        changeIcon($('#icon-list'), true);
-                    } else {
-                        changeIcon($('#icon-list'), false);
-                    }
-                    if (blockquote) {
-                        changeIcon($('#icon-quote'), true);
-                    } else {
-                        changeIcon($('#icon-quote'), false);
-                    }
+            var latestElement = options.length;
+            //console.log("element", latestElement);
+            let attributes = latestElement.attributes;
+            let insert = latestElement.insert;
+            if (attributes) {
+                var list = attributes.list;
+                var blockquote = attributes.blockquote;
+                if (isNotNull(list)) {
+                    changeIcon($('#icon-list'), true);
+                } else {
+                    changeIcon($('#icon-list'), false);
                 }
-            });
+                if (isNotNull(blockquote)) {
+                    changeIcon($('#icon-quote'), true);
+                } else {
+                    changeIcon($('#icon-quote'), false);
+                }
+            }
         }
     }
+    if (delta) {
+        var options = delta.ops;
+        if (options.length == 2 && 1 == options[1].retain && isNotNull(options[1].attributes) && isNull(options[1].attributes.list)) {
+            changeIcon($('#icon-list'), false);
+        }
+    }
+}
+
+function isNotNull(item) {
+    if ("undefined" == typeof (item) || null == item) {
+        return false;
+    }
+    return true;
+}
+
+function isNull(item) {
+    return !isNotNull(item);
 }
 
 $(document).ready(function () {
