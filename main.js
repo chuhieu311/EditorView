@@ -27,6 +27,7 @@ var quill = null;
 var arrImageBase64 = [];
 var imageBase64 = '';
 var customBarHeight = 0;
+const MAX_LENGTH = 175;
 
 //  custom image
 $("#selectedImage").on("change", function () {
@@ -52,6 +53,8 @@ function initEditor(placeholder) {
         changeIconAfterTextChange(oldDelta, delta);
     });
     quill.focus(true);
+    // disable editor
+    showToolbar(false);
 }
 
 function setReviewContent(reviewContent) {
@@ -74,9 +77,16 @@ function getReviewContentHTML(arrImage) {
 function getReviewIntro() {
     var contentHtml = $(".ql-editor")[0].innerHTML;
     // console.log('test', contentHtml);
-    if (contentHtml) {
-        // console.log('ahihi', contentHtml.replace(/<\/?[^>]+(>|$)/g, ""));
-        return contentHtml.replace(/<\/?[^>]+(>|$)/g, "");
+    if (isNotNull(contentHtml)) {
+        var temp = contentHtml.replace(/<\/?[^>]+(>|$)/g, "");
+        if(temp.length > MAX_LENGTH) {
+            for(var run = MAX_LENGTH; run >= 0; run--){
+                if(" " == temp.charAt(run)) {
+                    return temp.substring(0, run);
+                }
+            }
+        }
+        return temp;
     } else {
         return '';
     }
@@ -120,6 +130,7 @@ function showToolbar(isShow) {
             $("#editor").css('paddingBottom', customBarHeight + 1);
         }
     } else {
+        quill.root.setAttribute('data-placeholder', "");
         quill.enable(false);
         $('#custom-toolbar').hide();
         $("#editor").css('paddingBottom', 0);
