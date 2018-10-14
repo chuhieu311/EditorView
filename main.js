@@ -32,8 +32,8 @@ const MAX_LENGTH = 175;
 //  custom image
 $("#selectedImage").on("change", function () {
     const file = $("#selectedImage")[0].files[0];
-    // file type is only image and less than 1MB
-    if (/^image\//.test(file.type) && file.size / 1048576 < 1) {
+    // file type is only image and less than 2MB
+    if (/^image\//.test(file.type) && file.size / 1048576 < 2) {
         convertImageToBase64(file);
     } else {
         alert("Định dạng không phù hợp hoặc dung lượng ảnh lớn hơn 1M");
