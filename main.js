@@ -7,8 +7,8 @@ var options = {
                     $("#selectedImage").click();
                 },
                 clean: function () {
-                    let index = 0;
-                    let range = this.quill.getSelection();
+                    var index = 0;
+                    var range = this.quill.getSelection();
                     if (null != range && null != range.index) {
                         index = range.index;
                     }
@@ -40,7 +40,7 @@ $("#selectedImage").on("change", function () {
     }
     $("#selectedImage").val('');
 });
-//initEditor();
+// initEditor();
 function initEditor(placeholder) {
     if (placeholder) {
         options.placeholder = placeholder;
@@ -68,9 +68,10 @@ function getReviewContentHTML(arrImage) {
     // Get html 
     var contentHtml = $(".ql-editor")[0].innerHTML;
     // Replace base64 -> url
-    arrImage.forEach((element, index) => {
+    var index = 0;
+    for (index = 0; index < arrImage.length; index++) {
         contentHtml = contentHtml.replace(arrImageBase64[index], element);
-    });
+    }
     return contentHtml;
 }
 
@@ -79,9 +80,9 @@ function getReviewIntro() {
     // console.log('test', contentHtml);
     if (isNotNull(contentHtml)) {
         var temp = contentHtml.replace(/<\/?[^>]+(>|$)/g, "");
-        if(temp.length > MAX_LENGTH) {
-            for(var run = MAX_LENGTH; run >= 0; run--){
-                if(" " == temp.charAt(run)) {
+        if (temp.length > MAX_LENGTH) {
+            for (var run = MAX_LENGTH; run >= 0; run--) {
+                if (" " == temp.charAt(run)) {
                     return temp.substring(0, run);
                 }
             }
@@ -110,7 +111,7 @@ function getArrImageBase64() {
 }
 
 function setUrlImage(imageUrl) {
-    let range = quill.getSelection();
+    var range = quill.getSelection();
     quill.insertEmbed(
         range.index,
         "image",
@@ -153,7 +154,7 @@ function convertImageToBase64(file) {
     // create a new FileReader to read this image and convert to base64 format
     var reader = new FileReader();
     // Define a callback function to run, when FileReader finishes its job
-    reader.onload = e => {
+    reader.onload = function(e) {
         // Read image as base64 and set to imageData
         setUrlImage(e.target.result);
     }
@@ -248,8 +249,8 @@ function changeIconAfterTextChange(oldDelta, delta) {
         if (options) {
             var latestElement = options.length;
             //console.log("element", latestElement);
-            let attributes = latestElement.attributes;
-            let insert = latestElement.insert;
+            var attributes = latestElement.attributes;
+            var insert = latestElement.insert;
             if (attributes) {
                 var list = attributes.list;
                 var blockquote = attributes.blockquote;
